@@ -30,7 +30,7 @@ $posts = $stmt->fetchAll();
     <div class="max-w-2xl w-full text-center">
         <img src="logo-gold.png" class="h-40 w-auto mx-auto mb-8 drop-shadow-md">
         
-        <h1 class="text-4xl font-bold mb-2 text-board-text">SAGAFLEX X</h1>
+        <h1 class="text-4xl font-bold mb-2 text-board-text">SAGAFLEX</h1>
         <p class="text-lg mb-8 text-[#857F72]">Sistema de Intercambio de Mensajes</p>
 
         <div class="flex justify-center gap-6 mb-12">
