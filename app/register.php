@@ -1,16 +1,51 @@
-<?php session_start(); if(isset($_SESSION['user_id'])) header("Location: /app/home.php"); ?>
+<?php session_start();
+if (isset($_SESSION['user_id'])) header("Location: /app/home.php"); ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Registro / Sagaflex</title>
     <link rel="icon" type="image/png" href="/public/favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/cdn/tailwindcdn.js"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { board: { bg: '#FDFCF8', border: '#B8860B', accent: '#FFD700' } }, boxShadow: { 'hard': '6px 6px 0px 0px black' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        board: {
+                            bg: '#FDFCF8',
+                            border: '#B8860B',
+                            accent: '#FFD700'
+                        }
+                    },
+                    boxShadow: {
+                        'hard': '6px 6px 0px 0px black'
+                    }
+                }
+            }
+        }
     </script>
-    <style> body { background-color: theme('colors.board.bg'); font-family: 'Consolas', monospace; } .input-retro { border: 2px solid black; padding: 10px; width: 100%; background: white; } .input-retro:focus { background: #FFD700; outline: none; } </style>
+    <style>
+        body {
+            background-color: theme('colors.board.bg');
+            font-family: 'Consolas', monospace;
+        }
+
+        .input-retro {
+            border: 2px solid black;
+            padding: 10px;
+            width: 100%;
+            background: white;
+        }
+
+        .input-retro:focus {
+            background: #FFD700;
+            outline: none;
+        }
+    </style>
 </head>
+
 <body class="flex items-center justify-center h-screen">
     <div class="w-full max-w-md p-8 border-4 border-black bg-white shadow-hard relative">
         <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white border-2 border-black px-4 py-1 font-bold">
@@ -21,9 +56,9 @@
             <img src="/public/logo-gold.png" class="h-16 mx-auto">
         </div>
 
-        <?php if(isset($_GET['error'])): ?>
+        <?php if (isset($_GET['error'])): ?>
             <div class="bg-red-100 border-2 border-red-500 text-red-700 p-2 mb-4 text-center font-bold">
-                <?= htmlspecialchars($_GET['error']) ?>
+                INFO: <?= htmlspecialchars($_GET['error']) ?>
             </div>
         <?php endif; ?>
 
@@ -45,10 +80,11 @@
                 REGISTRARME >>
             </button>
         </form>
-        
+
         <div class="mt-6 text-center text-sm">
             <a href="/app/login.php" class="underline hover:text-board-border">VOLVER AL LOGIN</a>
         </div>
     </div>
 </body>
+
 </html>

@@ -1,6 +1,6 @@
 <?php
-// actions.php - VERSIÓN FINAL CON LIKES
-require __DIR__ . '/../config/db.php';
+require_once '../config.php';
+require ROOT_PATH . '/config/db.php';
 session_start();
 
 // Aumentamos límite de memoria para subida de imágenes pesadas
@@ -17,13 +17,13 @@ if ($action === 'register') {
     $email = trim($_POST['email']);
     $pass = $_POST['password'];
 
-    if(empty($user) || empty($email) || empty($pass)) {
-         header("Location: /app/register.php?error=Todos los campos son obligatorios");
-         exit;
+    if (empty($user) || empty($email) || empty($pass)) {
+        header("Location: /app/register.php?error=Todos los campos son obligatorios");
+        exit;
     }
 
     $passHash = password_hash($pass, PASSWORD_BCRYPT);
-    
+
     try {
         // Asignamos 'default.png' al registrarse
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, profile_picture) VALUES (?, ?, ?, 'default.png')");
@@ -66,24 +66,24 @@ if ($action === 'update_profile') {
 
     $userId = $_SESSION['user_id'];
     $bio = trim($_POST['bio']);
-    $uploadDir = __DIR__ . '/../uploads/';
+    $uploadDir = ROOT_PATH . '/uploads/';
 
     // Verificar si se intentó subir un archivo
     if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['size'] > 0) {
-        
+
         // A. Chequear errores de PHP
         if ($_FILES['profile_pic']['error'] !== UPLOAD_ERR_OK) {
-             $errores = [
-                 1 => "El archivo es demasiado pesado (server limit).",
-                 2 => "El archivo es demasiado pesado (form limit).",
-                 3 => "Subida parcial.",
-                 4 => "No se subió archivo.",
-                 6 => "Error de carpeta temporal.",
-                 7 => "Error de escritura en disco.",
-                 8 => "Extensión de PHP detuvo la subida."
-             ];
-             $errorCode = $_FILES['profile_pic']['error'];
-             die("❌ ERROR AL SUBIR: " . ($errores[$errorCode] ?? "Error desconocido"));
+            $errores = [
+                1 => "El archivo es demasiado pesado (server limit).",
+                2 => "El archivo es demasiado pesado (form limit).",
+                3 => "Subida parcial.",
+                4 => "No se subió archivo.",
+                6 => "Error de carpeta temporal.",
+                7 => "Error de escritura en disco.",
+                8 => "Extensión de PHP detuvo la subida."
+            ];
+            $errorCode = $_FILES['profile_pic']['error'];
+            die("❌ ERROR AL SUBIR: " . ($errores[$errorCode] ?? "Error desconocido"));
         }
 
         // B. Validar tipo MIME (Seguridad)
@@ -93,25 +93,24 @@ if ($action === 'update_profile') {
         if (!in_array($fileType, $allowedTypes)) {
             die("❌ ERROR: Tipo de archivo no permitido. Solo JPG, PNG, GIF o WEBP.");
         }
-        
+
         // C. Verificar carpeta
         if (!is_dir($uploadDir)) {
             die("❌ ERROR CRÍTICO: La carpeta 'uploads/' no existe. Créala en tu proyecto.");
         }
-        
+
         // D. Generar nombre único y mover
         $ext = pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION);
-        $newFilename = uniqid('u'.$userId.'_', true) . '.' . $ext;
+        $newFilename = uniqid('u' . $userId . '_', true) . '.' . $ext;
         $destination = $uploadDir . $newFilename;
-        
+
         if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $destination)) {
             // ÉXITO: Guardamos bio y nombre de foto
             $stmt = $pdo->prepare("UPDATE users SET bio = ?, profile_picture = ? WHERE id = ?");
             $stmt->execute([$bio, $newFilename, $userId]);
         } else {
-             die("❌ ERROR: No se pudo mover el archivo. Verifica permisos de escritura.");
+            die("❌ ERROR: No se pudo mover el archivo. Verifica permisos de escritura.");
         }
-
     } else {
         // Si no hay foto nueva, solo actualizamos Bio
         $stmt = $pdo->prepare("UPDATE users SET bio = ? WHERE id = ?");
@@ -132,9 +131,9 @@ if ($action === 'create_post') {
     $userId = $_SESSION['user_id'];
     $content = trim($_POST['content']);
 
-    if(empty($content)) {
-         header("Location: /app/home.php");
-         exit;
+    if (empty($content)) {
+        header("Location: /app/home.php");
+        exit;
     }
 
     // REGLA ANTI-SPAM: Máximo 3 posts en 10 minutos
@@ -164,13 +163,13 @@ if ($action === 'delete_post') {
 
 if ($action === 'update_post') {
     if (!isset($_SESSION['user_id'])) die("Acceso denegado");
-    
+
     $content = trim($_POST['content']);
-    if(empty($content)) die("El post no puede estar vacío");
+    if (empty($content)) die("El post no puede estar vacío");
 
     // Capturamos el checkbox de privacidad (1 = Privado, 0 = Público)
     $isPrivate = isset($_POST['is_private']) ? 1 : 0;
-    
+
     $category = $_POST['category'];
     $postId = $_POST['post_id'];
     $userId = $_SESSION['user_id'];
@@ -178,7 +177,7 @@ if ($action === 'update_post') {
     // SQL Actualizado para guardar cambios de privacidad
     $stmt = $pdo->prepare("UPDATE posts SET content = ?, category = ?, is_private = ? WHERE id = ? AND user_id = ?");
     $stmt->execute([$content, $category, $isPrivate, $postId, $userId]);
-    
+
     header("Location: /app/home.php");
     exit;
 }
@@ -213,4 +212,3 @@ if ($action === 'toggle_like') {
     header("Location: $redirect");
     exit;
 }
-?>
