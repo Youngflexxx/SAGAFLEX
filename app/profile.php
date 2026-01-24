@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require __DIR__ . '/../config/db.php';
 session_start();
 if (!isset($_SESSION['user_id'])) { header("Location: /app/login.php"); exit; }
 
@@ -64,7 +64,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
         <div class="flex flex-col md:flex-row gap-8">
             <div class="flex-shrink-0 text-center">
                 <div class="w-40 h-40 border-4 border-black p-1 bg-white mx-auto">
-                    <img src="uploads/<?= htmlspecialchars($userProfile['profile_picture'] ?? 'default.png') ?>" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    <img src="./../uploads/<?= htmlspecialchars($userProfile['profile_picture'] ?? 'default.png') ?>" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
                 </div>
                 <div class="mt-2 font-mono text-xs text-board-meta">IMG_REF: <?= substr(md5($userProfile['id']), 0, 6) ?></div>
             </div>

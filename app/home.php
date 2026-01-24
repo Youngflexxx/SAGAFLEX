@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require __DIR__ . '/../config/db.php';
 session_start();
 if (!isset($_SESSION['user_id'])) { header("Location: /app/login.php"); exit; }
 
@@ -122,8 +122,9 @@ $posts = $stmt->fetchAll();
 
         <div class="p-6 bg-[#FDFCF5] border-b-4 border-board-border" v-scope="{ chars: 0, max: 280, content: '' }">
             <h2 class="font-mono text-sm font-bold text-board-link mb-2">// NUEVA_ENTRADA</h2>
-            <form action="/app/actions.php" method="POST" class="flex gap-4">
-                <div class="hidden sm:block w-16 h-16 hard-border bg-white flex-shrink-0">
+            <form action="./actions.php" method="POST" class="flex gap-4">
+                <input type="hidden" name="action" value="create_post">
+            <div class="hidden sm:block w-16 h-16 hard-border bg-white flex-shrink-0">
                     <img src="/uploads/<?= htmlspecialchars($myAvatar) ?>" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
                 </div>
 

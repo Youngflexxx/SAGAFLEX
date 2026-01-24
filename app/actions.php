@@ -1,6 +1,6 @@
 <?php
 // actions.php - VERSIÓN FINAL CON LIKES
-require 'db.php';
+require __DIR__ . '/../config/db.php';
 session_start();
 
 // Aumentamos límite de memoria para subida de imágenes pesadas
