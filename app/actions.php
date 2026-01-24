@@ -18,7 +18,7 @@ if ($action === 'register') {
     $pass = $_POST['password'];
 
     if(empty($user) || empty($email) || empty($pass)) {
-         header("Location: register.php?error=Todos los campos son obligatorios");
+         header("Location: /app/register.php?error=Todos los campos son obligatorios");
          exit;
     }
 
@@ -28,9 +28,9 @@ if ($action === 'register') {
         // Asignamos 'default.png' al registrarse
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, profile_picture) VALUES (?, ?, ?, 'default.png')");
         $stmt->execute([$user, $email, $passHash]);
-        header("Location: login.php?error=Registro exitoso, por favor inicia sesión.");
+        header("Location: /app/login.php?error=Registro exitoso, por favor inicia sesión.");
     } catch (Exception $e) {
-        header("Location: register.php?error=El usuario o email ya existe.");
+        header("Location: /app/register.php?error=El usuario o email ya existe.");
     }
 }
 
@@ -45,9 +45,9 @@ if ($action === 'login') {
     if ($user && password_verify($pass, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
-        header("Location: home.php");
+        header("Location: /app/home.php");
     } else {
-        header("Location: login.php?error=Credenciales incorrectas.");
+        header("Location: /app/login.php?error=Credenciales incorrectas.");
     }
 }
 
@@ -118,7 +118,7 @@ if ($action === 'update_profile') {
         $stmt->execute([$bio, $userId]);
     }
 
-    header("Location: profile.php?user_id=$userId");
+    header("Location: /app/profile.php?user_id=$userId");
     exit;
 }
 
@@ -133,7 +133,7 @@ if ($action === 'create_post') {
     $content = trim($_POST['content']);
 
     if(empty($content)) {
-         header("Location: home.php");
+         header("Location: /app/home.php");
          exit;
     }
 
@@ -141,7 +141,7 @@ if ($action === 'create_post') {
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM posts WHERE user_id = ? AND created_at > datetime('now', '-10 minutes')");
     $stmt->execute([$userId]);
     if ($stmt->fetch()['total'] >= 3) {
-        die("❌ ERROR ANTI-SPAM: Estás publicando muy rápido. (Límite: 3 posts cada 10 min). <br><a href='home.php'>Volver</a>");
+        die("❌ ERROR ANTI-SPAM: Estás publicando muy rápido. (Límite: 3 posts cada 10 min). <br><a href='/app/home.php'>Volver</a>");
     }
 
     $category = $_POST['category'];
@@ -149,7 +149,7 @@ if ($action === 'create_post') {
 
     $stmt = $pdo->prepare("INSERT INTO posts (user_id, content, category, is_private) VALUES (?, ?, ?, ?)");
     $stmt->execute([$userId, $content, $category, $isPrivate]);
-    header("Location: home.php");
+    header("Location: /app/home.php");
     exit;
 }
 
@@ -158,7 +158,7 @@ if ($action === 'delete_post') {
     // Solo borra si el ID del post coincide con el ID del usuario dueño de la sesión
     $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ? AND user_id = ?");
     $stmt->execute([$_POST['post_id'], $_SESSION['user_id']]);
-    header("Location: home.php");
+    header("Location: /app/home.php");
     exit;
 }
 
@@ -179,7 +179,7 @@ if ($action === 'update_post') {
     $stmt = $pdo->prepare("UPDATE posts SET content = ?, category = ?, is_private = ? WHERE id = ? AND user_id = ?");
     $stmt->execute([$content, $category, $isPrivate, $postId, $userId]);
     
-    header("Location: home.php");
+    header("Location: /app/home.php");
     exit;
 }
 
@@ -209,7 +209,7 @@ if ($action === 'toggle_like') {
     }
 
     // Redirigimos de vuelta a la página donde se hizo click (Home o Perfil)
-    $redirect = $_SERVER['HTTP_REFERER'] ?? 'home.php';
+    $redirect = $_SERVER['HTTP_REFERER'] ?? '/app/home.php';
     header("Location: $redirect");
     exit;
 }

@@ -1,7 +1,7 @@
 <?php
 require 'db.php';
 session_start();
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
+if (!isset($_SESSION['user_id'])) { header("Location: /app/login.php"); exit; }
 
 $userId = $_SESSION['user_id'];
 
@@ -33,7 +33,7 @@ $posts = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Tablón / Sagaflex X</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="/public/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -94,20 +94,20 @@ $posts = $stmt->fetchAll();
     
     <header class="hidden lg:flex w-64 flex-col sticky top-0 h-screen p-4 border-r-2 border-board-border bg-[#F8F5E9]">
         <div class="mb-8 p-2 text-center">
-            <a href="home.php">
-                <img src="logo-gold.png" alt="Sagaflex" class="h-24 w-auto object-contain mx-auto drop-shadow-sm">
+            <a href="/app/home.php">
+                <img src="/public/logo-gold.png" alt="Sagaflex" class="h-24 w-auto object-contain mx-auto drop-shadow-sm">
             </a>
             <div class="font-mono text-xs font-bold text-board-border mt-2 tracking-widest">[SYSTEM_ONLINE]</div>
         </div>
         
         <nav class="space-y-4 font-mono text-lg">
-            <a href="home.php" class="block p-2 hover:bg-board-border hover:text-white transition border-l-4 border-transparent hover:border-black">
+            <a href="/app/home.php" class="block p-2 hover:bg-board-border hover:text-white transition border-l-4 border-transparent hover:border-black">
                 > /Tablón/
             </a>
-            <a href="profile.php?user_id=<?= $_SESSION['user_id'] ?>" class="block p-2 hover:bg-board-border hover:text-white transition border-l-4 border-transparent hover:border-black">
+            <a href="/app/profile.php?user_id=<?= $_SESSION['user_id'] ?>" class="block p-2 hover:bg-board-border hover:text-white transition border-l-4 border-transparent hover:border-black">
                 > /Mi_Archivo/
             </a>
-            <a href="actions.php?action=logout" class="block p-2 text-red-700 hover:bg-red-700 hover:text-white transition mt-8 font-bold border-l-4 border-transparent hover:border-black">
+            <a href="/app/actions.php?action=logout" class="block p-2 text-red-700 hover:bg-red-700 hover:text-white transition mt-8 font-bold border-l-4 border-transparent hover:border-black">
                 [X] DESCONECTAR
             </a>
         </nav>
@@ -116,15 +116,15 @@ $posts = $stmt->fetchAll();
     <main class="flex-1 min-h-screen">
         
         <div class="lg:hidden p-4 border-b-2 border-board-border bg-board-accent flex justify-between items-center sticky top-0 z-20">
-            <img src="logo-gold.png" class="h-8 w-auto">
-            <a href="actions.php?action=logout" class="font-mono font-bold border-2 border-black px-2 bg-white">[SALIR]</a>
+            <img src="/public/logo-gold.png" class="h-8 w-auto">
+            <a href="/app/actions.php?action=logout" class="font-mono font-bold border-2 border-black px-2 bg-white">[SALIR]</a>
         </div>
 
         <div class="p-6 bg-[#FDFCF5] border-b-4 border-board-border" v-scope="{ chars: 0, max: 280, content: '' }">
             <h2 class="font-mono text-sm font-bold text-board-link mb-2">// NUEVA_ENTRADA</h2>
-            <form action="actions.php" method="POST" class="flex gap-4">
+            <form action="/app/actions.php" method="POST" class="flex gap-4">
                 <div class="hidden sm:block w-16 h-16 hard-border bg-white flex-shrink-0">
-                    <img src="uploads/<?= htmlspecialchars($myAvatar) ?>" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    <img src="/uploads/<?= htmlspecialchars($myAvatar) ?>" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
                 </div>
 
                 <div class="flex-1 space-y-3">
@@ -171,9 +171,9 @@ $posts = $stmt->fetchAll();
                     </div>
 
                     <div class="flex gap-4">
-                         <a href="profile.php?user_id=<?= $post['user_id'] ?>" class="flex-shrink-0">
+                         <a href="/app/profile.php?user_id=<?= $post['user_id'] ?>" class="flex-shrink-0">
                             <div class="w-16 h-16 border-2 border-black p-0.5 bg-white">
-                                <img src="uploads/<?= htmlspecialchars($post['profile_picture'] ?? 'default.png') ?>" class="w-full h-full object-cover">
+                                <img src="/uploads/<?= htmlspecialchars($post['profile_picture'] ?? 'default.png') ?>" class="w-full h-full object-cover">
                             </div>
                         </a>
                         
@@ -182,14 +182,14 @@ $posts = $stmt->fetchAll();
                             
                             <div class="mt-4 flex items-center justify-end gap-6 meta select-none">
                                 <?php if($post['user_id'] == $_SESSION['user_id']): ?>
-                                    <a href="edit.php?id=<?= $post['id'] ?>" class="hover:text-board-link hover:underline">[EDIT]</a>
-                                    <form action="actions.php" method="POST" onsubmit="return confirm('¿Eliminar registro permanentemente?');" class="inline">
+                                    <a href="/app/edit.php?id=<?= $post['id'] ?>" class="hover:text-board-link hover:underline">[EDIT]</a>
+                                    <form action="/app/actions.php" method="POST" onsubmit="return confirm('¿Eliminar registro permanentemente?');" class="inline">
                                         <input type="hidden" name="action" value="delete_post"><input type="hidden" name="post_id" value="<?= $post['id'] ?>">
                                         <button type="submit" class="hover:text-red-600 hover:underline">[DEL]</button>
                                     </form>
                                 <?php endif; ?>
                                 
-                                <form action="actions.php" method="POST" class="inline">
+                                <form action="/app/actions.php" method="POST" class="inline">
                                     <input type="hidden" name="action" value="toggle_like"><input type="hidden" name="post_id" value="<?= $post['id'] ?>">
                                     <button type="submit" class="group flex items-center gap-1 hover:text-board-border transition">
                                         <?php if($post['liked_by_me']): ?>

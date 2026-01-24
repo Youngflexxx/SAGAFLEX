@@ -1,9 +1,9 @@
 <?php
 require 'db.php';
 session_start();
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
+if (!isset($_SESSION['user_id'])) { header("Location: /app/login.php"); exit; }
 
-$profileId = $_GET['user_id'] ?? header("Location: home.php");
+$profileId = $_GET['user_id'] ?? header("Location: /app/home.php");
 
 $stmtUser = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmtUser->execute([$profileId]);
@@ -28,7 +28,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
 <head>
     <meta charset="UTF-8">
     <title>Archivo: <?= htmlspecialchars($userProfile['username']) ?></title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="/public/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -55,7 +55,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
 <div class="container mx-auto max-w-4xl">
     
     <div class="mb-6 font-mono font-bold text-lg">
-        <a href="home.php" class="hover:underline text-board-link"><< VOLVER AL TABLÓN</a>
+        <a href="/app/home.php" class="hover:underline text-board-link"><< VOLVER AL TABLÓN</a>
     </div>
 
     <div class="hard-border bg-white p-6 shadow-hard mb-8 relative overflow-hidden">
@@ -71,7 +71,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
 
             <div class="flex-1">
                 <?php if ($isEditing): ?>
-                    <form action="actions.php" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <form action="/app/actions.php" method="POST" enctype="multipart/form-data" class="space-y-4">
                         <input type="hidden" name="action" value="update_profile">
                         <div>
                             <label class="block font-mono font-bold text-sm">NUEVA IMAGEN:</label>
@@ -83,7 +83,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
                         </div>
                         <div class="flex gap-4">
                             <button type="submit" class="btn-retro px-6 py-2">GUARDAR DATOS</button>
-                            <a href="profile.php?user_id=<?= $profileId ?>" class="font-mono text-red-600 underline self-center">[CANCELAR]</a>
+                            <a href="/app/profile.php?user_id=<?= $profileId ?>" class="font-mono text-red-600 underline self-center">[CANCELAR]</a>
                         </div>
                     </form>
                 <?php else: ?>
@@ -103,7 +103,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] == 'true' && $profileId == $_
 
                     <?php if($profileId == $_SESSION['user_id']): ?>
                         <div class="mt-6 text-right">
-                            <a href="profile.php?user_id=<?= $profileId ?>&edit=true" class="btn-retro px-4 py-1 text-sm inline-block">EDITAR EXPEDIENTE</a>
+                            <a href="/app/profile.php?user_id=<?= $profileId ?>&edit=true" class="btn-retro px-4 py-1 text-sm inline-block">EDITAR EXPEDIENTE</a>
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>

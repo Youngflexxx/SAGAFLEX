@@ -1,8 +1,8 @@
 <?php
 require 'db.php';
 session_start();
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) { header("Location: home.php"); exit; }
+if (!isset($_SESSION['user_id'])) { header("Location: /app/login.php"); exit; }
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) { header("Location: /app/home.php"); exit; }
 $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ? AND user_id = ?");
 $stmt->execute([$_GET['id'], $_SESSION['user_id']]);
 $post = $stmt->fetch();
@@ -13,7 +13,7 @@ if (!$post) die("Error de acceso.");
 <head>
     <meta charset="UTF-8">
     <title>Editar / Sagaflex</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="/public/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: { colors: { board: { bg: '#FDFCF8', border: '#B8860B', accent: '#FFD700' } } } } }
@@ -44,7 +44,7 @@ if (!$post) die("Error de acceso.");
 
             <div class="flex gap-4 pt-4">
                 <button type="submit" class="flex-1 bg-black text-white font-bold py-2 border-2 border-black hover:bg-white hover:text-black">GUARDAR</button>
-                <a href="home.php" class="flex-1 text-center py-2 border-2 border-red-600 text-red-600 font-bold hover:bg-red-600 hover:text-white">CANCELAR</a>
+                <a href="/app/home.php" class="flex-1 text-center py-2 border-2 border-red-600 text-red-600 font-bold hover:bg-red-600 hover:text-white">CANCELAR</a>
             </div>
         </form>
     </div>
